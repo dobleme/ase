@@ -1,9 +1,5 @@
 package lexer
 
-import (
-	"fmt"
-)
-
 type Lexer struct {
 	input        string
 	position     int
@@ -11,7 +7,15 @@ type Lexer struct {
 	char         byte
 }
 
-var tokenType = map[byte]TokenType{
+const (
+	RESERVED_CHAR uint8 = iota
+	LETTER
+	NUMBER
+
+	ILLEGAL_CHAR
+)
+
+var reservedChar = map[byte]TokenType{
 	'=': ASSIGN,
 	'+': PLUS,
 	'(': LEFT_PARENTHESIS,
@@ -23,6 +27,11 @@ var tokenType = map[byte]TokenType{
 	0:   EOF,
 }
 
+var reserverKeyword = map[string]TokenType{
+	"fn":  FUNCTION,
+	"let": LET,
+}
+
 func New(input string) *Lexer {
 	l := &Lexer{input: input}
 	l.readChar()
@@ -31,14 +40,35 @@ func New(input string) *Lexer {
 }
 
 func (l *Lexer) NextToken() *Token {
-	tType, ok := tokenType[l.char]
-	if !ok {
-		panic(fmt.Sprintf("Token %v incorrect", l.char))
-	}
+	var tType TokenType
+	var tLiteral string
 
-	tLiteral := string(l.char)
-	if tType == EOF {
-		tLiteral = ""
+	l.skipWhitespace()
+
+	switch charType(l.char) {
+	case RESERVED_CHAR:
+		tType, _ = reservedChar[l.char]
+		tLiteral = string(l.char)
+		if tType == EOF {
+			tLiteral = ""
+		}
+
+	case LETTER:
+		var ok bool
+		tLiteral = l.readIdentifier()
+		if tType, ok = reserverKeyword[tLiteral]; !ok {
+			tType = IDENTIFIER
+		}
+		return &Token{Type: tType, Literal: tLiteral}
+
+	case NUMBER:
+		tType = INT
+		tLiteral = l.readNumber()
+		return &Token{Type: tType, Literal: tLiteral}
+
+	default:
+		tType = ILLEGAL
+		tLiteral = string(l.char)
 	}
 
 	l.readChar()
@@ -55,4 +85,57 @@ func (l *Lexer) readChar() {
 
 	l.position = l.readPosition
 	l.readPosition += 1
+}
+
+func (l *Lexer) readIdentifier() string {
+	pos := l.position
+	for isLetter(l.char) {
+		l.readChar()
+	}
+
+	return l.input[pos:l.position]
+}
+
+func (l *Lexer) readNumber() string {
+	pos := l.position
+	for isNumber(l.char) {
+		l.readChar()
+	}
+
+	return l.input[pos:l.position]
+}
+
+func (l *Lexer) skipWhitespace() {
+	for l.char == ' ' || l.char == '\t' || l.char == '\n' || l.char == '\r' {
+		l.readChar()
+	}
+}
+
+func charType(ch byte) uint8 {
+	if isReservedChar(ch) {
+		return RESERVED_CHAR
+	}
+
+	if isLetter(ch) {
+		return LETTER
+	}
+
+	if isNumber(ch) {
+		return NUMBER
+	}
+
+	return ILLEGAL_CHAR
+}
+
+func isReservedChar(ch byte) bool {
+	_, ok := reservedChar[ch]
+	return ok
+}
+
+func isLetter(ch byte) bool {
+	return ('a' <= ch && ch <= 'z') || ('A' <= ch && ch <= 'Z') || ch == '_'
+}
+
+func isNumber(ch byte) bool {
+	return '0' <= ch && ch <= '9'
 }
