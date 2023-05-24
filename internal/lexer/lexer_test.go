@@ -97,6 +97,46 @@ let result = add(five, ten);
 			{lexer.SEMICOLON, ";"},
 		},
 	},
+	"conditional shit": {
+		code: `if (5 < 10) {
+    return true;
+} else {
+    return false;
+}`,
+		result: []TokenTest{
+			{lexer.IF, "if"},
+			{lexer.LEFT_PARENTHESIS, "("},
+			{lexer.INT, "5"},
+			{lexer.LT, "<"},
+			{lexer.INT, "10"},
+			{lexer.RIGHT_PARENTHESIS, ")"},
+			{lexer.LEFT_BRACE, "{"},
+			{lexer.RETURN, "return"},
+			{lexer.TRUE, "true"},
+			{lexer.SEMICOLON, ";"},
+			{lexer.RIGHT_BRACE, "}"},
+			{lexer.ELSE, "else"},
+			{lexer.LEFT_BRACE, "{"},
+			{lexer.RETURN, "return"},
+			{lexer.FALSE, "false"},
+			{lexer.SEMICOLON, ";"},
+			{lexer.RIGHT_BRACE, "}"},
+		},
+	},
+	"multiple special character shit": {
+		code: `10 == 10;
+5 != 10;`,
+		result: []TokenTest{
+			{lexer.INT, "10"},
+			{lexer.EQ, "=="},
+			{lexer.INT, "10"},
+			{lexer.SEMICOLON, ";"},
+			{lexer.INT, "5"},
+			{lexer.NEQ, "!="},
+			{lexer.INT, "10"},
+			{lexer.SEMICOLON, ";"},
+		},
+	},
 }
 
 func TestLexer(t *testing.T) {

@@ -16,6 +16,8 @@ const (
 	ASTERISK
 	SLASH
 
+	EQ
+	NEQ
 	GT
 	LT
 
@@ -30,6 +32,11 @@ const (
 	// Keywords
 	FUNCTION
 	LET
+	RETURN
+	TRUE
+	FALSE
+	IF
+	ELSE
 )
 
 var reservedChar = map[byte]TokenType{
@@ -50,9 +57,19 @@ var reservedChar = map[byte]TokenType{
 	0:   EOF,
 }
 
+var reserverMultiChar = map[string]TokenType{
+	"==": EQ,
+	"!=": NEQ,
+}
+
 var reserverKeyword = map[string]TokenType{
-	"fn":  FUNCTION,
-	"let": LET,
+	"fn":     FUNCTION,
+	"let":    LET,
+	"return": RETURN,
+	"true":   TRUE,
+	"false":  FALSE,
+	"if":     IF,
+	"else":   ELSE,
 }
 
 type TokenType uint8

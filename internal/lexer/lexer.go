@@ -30,6 +30,17 @@ func (l *Lexer) NextToken() *Token {
 
 	switch charType(l.char) {
 	case RESERVED_CHAR:
+		if l.char == '=' || l.char == '!' {
+			if l.peekChar() == '=' {
+				char := l.char
+				l.readChar()
+
+				tLiteral = string([]byte{char, l.char})
+				tType = reserverMultiChar[tLiteral]
+				break
+			}
+		}
+
 		tType, _ = reservedChar[l.char]
 		tLiteral = string(l.char)
 		if tType == EOF {
@@ -68,6 +79,14 @@ func (l *Lexer) readChar() {
 
 	l.position = l.readPosition
 	l.readPosition += 1
+}
+
+func (l *Lexer) peekChar() byte {
+	if l.readPosition >= len(l.input) {
+		return 0
+	}
+
+	return l.input[l.readPosition]
 }
 
 func (l *Lexer) readIdentifier() string {
