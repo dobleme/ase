@@ -15,23 +15,6 @@ const (
 	ILLEGAL_CHAR
 )
 
-var reservedChar = map[byte]TokenType{
-	'=': ASSIGN,
-	'+': PLUS,
-	'(': LEFT_PARENTHESIS,
-	')': RIGHT_PARENTHESIS,
-	'{': LEFT_BRACE,
-	'}': RIGHT_BRACE,
-	',': COMMA,
-	';': SEMICOLON,
-	0:   EOF,
-}
-
-var reserverKeyword = map[string]TokenType{
-	"fn":  FUNCTION,
-	"let": LET,
-}
-
 func New(input string) *Lexer {
 	l := &Lexer{input: input}
 	l.readChar()

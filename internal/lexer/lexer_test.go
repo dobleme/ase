@@ -78,6 +78,25 @@ let result = add(five, ten);
 			{lexer.SEMICOLON, ";"},
 		},
 	},
+	"more simple shit": {
+		code: `!-/*5;
+5 < 10 > 5;
+`,
+		result: []TokenTest{
+			{lexer.BANG, "!"},
+			{lexer.MINUS, "-"},
+			{lexer.SLASH, "/"},
+			{lexer.ASTERISK, "*"},
+			{lexer.INT, "5"},
+			{lexer.SEMICOLON, ";"},
+			{lexer.INT, "5"},
+			{lexer.LT, "<"},
+			{lexer.INT, "10"},
+			{lexer.GT, ">"},
+			{lexer.INT, "5"},
+			{lexer.SEMICOLON, ";"},
+		},
+	},
 }
 
 func TestLexer(t *testing.T) {
