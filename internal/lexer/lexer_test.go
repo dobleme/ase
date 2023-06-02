@@ -3,7 +3,7 @@ package lexer_test
 import (
 	"testing"
 
-	"github.com/dobleme/ase-interpreter/internal/lexer"
+	"ase/internal/lexer"
 )
 
 type TokenTest struct {

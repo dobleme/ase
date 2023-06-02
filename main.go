@@ -5,7 +5,7 @@ import (
 	"os"
 	"os/user"
 
-	"github.com/dobleme/ase-interpreter/internal/repl"
+	"ase/internal/repl"
 )
 
 func main() {

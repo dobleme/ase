@@ -1,3 +1,3 @@
-module github.com/dobleme/ase-interpreter
+module ase
 
 go 1.18

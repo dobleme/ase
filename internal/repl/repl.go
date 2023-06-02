@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"io"
 
-	"github.com/dobleme/ase-interpreter/internal/lexer"
+	"ase/internal/lexer"
 )
 
 const PROMPT = "> "
